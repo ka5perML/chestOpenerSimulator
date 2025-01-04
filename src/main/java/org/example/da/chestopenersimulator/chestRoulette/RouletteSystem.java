@@ -2,6 +2,7 @@ package org.example.da.chestopenersimulator.chestRoulette;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,13 +13,13 @@ import org.bukkit.plugin.Plugin;
 
 import org.bukkit.scheduler.BukkitRunnable;
 import org.example.da.chestopenersimulator.playerManager.PlayerChangeBalance;
+import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
+import org.example.da.chestopenersimulator.visisbleSystem.VisibleTeamArmorStand;
 
 import java.util.*;
 
 public class RouletteSystem implements Listener{
     private final Map<Location, Long> chestCooldowns = new HashMap<>();
-    private final Map<Location, Boolean> chestAnimating = new HashMap<>();
-    private Map<Location,List<ArmorStand>> blocks = new HashMap<>();
     private Map<Player,Boolean> playerOpenList = new HashMap<>();
 
     @EventHandler
@@ -30,12 +31,6 @@ public class RouletteSystem implements Listener{
         if (clickedBlock == null || clickedBlock.getType() != Material.CHEST) return;
 
         Location chestLocation = clickedBlock.getLocation();
-        // Проверяем, не находится ли сундук в кулдауне (анимации)
-        if (chestAnimating.getOrDefault(chestLocation, false)) {
-            event.setCancelled(true); // Отменяем клик
-            player.sendMessage("Сундук занят!");
-            return;
-        }
         // Сундук на рестарте
         if (chestCooldowns.containsKey(chestLocation) &&
                 (System.currentTimeMillis() - chestCooldowns.get(chestLocation) < 6000)) {
@@ -43,12 +38,13 @@ public class RouletteSystem implements Listener{
             player.sendMessage("Сундук пока нельзя открыть!");
             return;
         }
+
         // Все условия пройдены, запускаем анимацию
         if (!playerOpenList.containsKey(player)) {
             // Обычный кейс
             if (ChestLocation.smallChestLocation(chestLocation)) {
                 player.sendMessage(ChatColor.RED + "Началось открытие!");
-                event.setCancelled(true); // Отменяем открытие обычного интерфейса сундука
+                event.setCancelled(true);
                 startRouletteAnimation(chestLocation, player,1);
                 chestCooldowns.put(chestLocation, System.currentTimeMillis());
                 playerOpenList.put(player, true);
@@ -76,7 +72,6 @@ public class RouletteSystem implements Listener{
         int numberOfBlocks = 16; // Количество блоков
         double radius = 1.5; // Радиус вращения
         List<ArmorStand> stands = new ArrayList<>();
-        chestAnimating.put(chestLocation, true);
         stands.removeAll(stands);
 
         // Спавн армор стендов
@@ -84,9 +79,9 @@ public class RouletteSystem implements Listener{
             ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity
                     (animationTeleport(i,0.1,chestLocation,radius,numberOfBlocks), EntityType.ARMOR_STAND);
             settingArmorStand(armorStand,num);
+            VisibleTeamArmorStand.hideArmorStand(armorStand, HideSystem.getTeamListPlayer(player));
             stands.add(armorStand);
         }
-        blocks.put(chestLocation, stands);
             Plugin plugin = Bukkit.getPluginManager().getPlugin("chestOpenerSimulator"); // Определение главного класса
             if (plugin == null) {
                 Bukkit.getLogger().severe("Don't found ChestOpenerSimulator");
@@ -98,21 +93,20 @@ public class RouletteSystem implements Listener{
 
                 @Override
                 public void run() {
-                    ArrayList<ArmorStand> blocks1 = (ArrayList<ArmorStand>) blocks.get(chestLocation);
                     if (ticksPassed >= 100) { // Конец
-                        chestAnimating.put(chestLocation, false);
-                        this.cancel();
-                        String winPrize = getPrize(blocks1);
+                        String winPrize = getPrize((ArrayList<ArmorStand>) stands);
                             if (winPrize != null) {
                             giveItem(player, winPrize);
                         }
-                        stopBlock(chestLocation);
+                        stopBlock((ArrayList<ArmorStand>) stands);
                         playerOpenList.remove(player);
+                        this.cancel();
                         return;
                     }
                     if (ticksPassed <= 80) {
-                        for (int i = 0; i < blocks1.size(); i++) {
-                            blocks1.get(i).teleport(animationTeleport(i, speed, chestLocation, radius, numberOfBlocks));
+                        for (int i = 0; i < stands.size(); i++) {
+                            CraftArmorStand craftArmorStand = (CraftArmorStand) stands.get(i);
+                            craftArmorStand.teleport(animationTeleport(i, speed, chestLocation, radius, numberOfBlocks));
                         }
                     }
                     speed += 2;
@@ -191,10 +185,8 @@ public class RouletteSystem implements Listener{
         }
     }
     // Удаляет армор стенды
-    private void stopBlock(Location chestLocation) {
-        ArrayList<ArmorStand> blocks1 = (ArrayList<ArmorStand>) blocks.get(chestLocation);
-        blocks.remove(chestLocation);
-        for (ArmorStand block : blocks1){
+    private void stopBlock(ArrayList<ArmorStand> armorStands) {
+        for (ArmorStand block : armorStands){
             block.remove();
         }
     }

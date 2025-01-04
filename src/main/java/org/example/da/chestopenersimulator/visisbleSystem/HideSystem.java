@@ -1,9 +1,14 @@
 package org.example.da.chestopenersimulator.visisbleSystem;
 
+import net.minecraft.server.v1_12_R1.EntityPlayer;
+import net.minecraft.server.v1_12_R1.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_12_R1.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.example.da.chestopenersimulator.ChestOpenerSimulator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +21,7 @@ public class HideSystem {
         for(Player player : hiddenPlayers.keySet()){
             for(Player player1 : hiddenPlayers.keySet()){
                 if(!player.equals(player1)){
-                    player.hidePlayer(getPluginName(), player1);
+                    player.hidePlayer(ChestOpenerSimulator.getPluginName(), player1);
                 }
             }
         }
@@ -25,10 +30,10 @@ public class HideSystem {
     private static void hideNewPlayer(Player player1){
         for(Player player : Bukkit.getOnlinePlayers()){
             if(!player.equals(player1)) {
-                player.hidePlayer(getPluginName(), player1);
+                player.hidePlayer(ChestOpenerSimulator.getPluginName(), player1);
             }
             if(!player1.equals(player)) {
-                player1.hidePlayer(getPluginName(),player);
+                player1.hidePlayer(ChestOpenerSimulator.getPluginName(),player);
             }
         }
     }
@@ -136,15 +141,15 @@ public class HideSystem {
             }
         }else if(getTeamListPlayer(player).getTeam1() == player){
             if(getTeamListPlayer(player).getTeam2() != null){
-                getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player + " вышел");
-                getTeamListPlayer(player).getTeam2().sendMessage(ChatColor.GREEN +  "Участник" + player + " вышел");
+                getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player.getDisplayName() + " вышел");
+                getTeamListPlayer(player).getTeam2().sendMessage(ChatColor.GREEN +  "Участник" + player.getDisplayName() + " вышел");
                 hiddenPlayers.put(getTeamListPlayer(player).getOwnerName(), new TeamList(getTeamListPlayer(player).getOwnerName(),
                         getTeamListPlayer(player).getTeam2(),null));
             }
-            getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player + " вышел");
+            getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player.getDisplayName() + " вышел");
             hiddenPlayers.put(getTeamListPlayer(player).getOwnerName(), new TeamList(getTeamListPlayer(player).getOwnerName(), null,null));
         }else if(getTeamListPlayer(player).getTeam2() == player){
-            getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player + " вышел");
+            getTeamListPlayer(player).getOwnerName().sendMessage(ChatColor.GREEN +  "Участник" + player.getDisplayName() + " вышел");
             hiddenPlayers.put(getTeamListPlayer(player).getOwnerName(), new TeamList(getTeamListPlayer(player).getOwnerName(),
                     getTeamListPlayer(player).getTeam1(),null));
         }
@@ -152,36 +157,27 @@ public class HideSystem {
     // Показать всех в группе
     private static void showJoinPlayerInTeam(Player owner){
         if(hiddenPlayers.get(owner).getTeam1() != null && hiddenPlayers.get(owner).getTeam2() == null){
-            owner.showPlayer(getPluginName(),hiddenPlayers.get(owner).getTeam1());
-            hiddenPlayers.get(owner).getTeam1().showPlayer(getPluginName(),owner);
+            hiddenPlayers.get(owner).getOwnerName().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam1());
+            hiddenPlayers.get(owner).getTeam1().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getOwnerName());
         }else if(hiddenPlayers.get(owner).getTeam1() != null && hiddenPlayers.get(owner).getTeam2() != null){
-            owner.showPlayer(getPluginName(),hiddenPlayers.get(owner).getTeam1());
-            owner.showPlayer(getPluginName(),hiddenPlayers.get(owner).getTeam2());
-            hiddenPlayers.get(owner).getTeam1().showPlayer(hiddenPlayers.get(owner).getTeam2());
-            hiddenPlayers.get(owner).getTeam1().showPlayer(owner);
-            hiddenPlayers.get(owner).getTeam2().showPlayer(hiddenPlayers.get(owner).getTeam1());
-            hiddenPlayers.get(owner).getTeam2().showPlayer(owner);
+            hiddenPlayers.get(owner).getOwnerName().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam1());
+            hiddenPlayers.get(owner).getOwnerName().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam2());
+            hiddenPlayers.get(owner).getTeam2().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam1());
+            hiddenPlayers.get(owner).getTeam2().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getOwnerName());
+            hiddenPlayers.get(owner).getTeam1().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam1());
+            hiddenPlayers.get(owner).getTeam1().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getOwnerName());
         } else if (hiddenPlayers.get(owner).getTeam1() == null && hiddenPlayers.get(owner).getTeam2() != null) {
-            owner.showPlayer(getPluginName(),hiddenPlayers.get(owner).getTeam2());
-            hiddenPlayers.get(owner).getTeam2().showPlayer(getPluginName(),owner);
+            hiddenPlayers.get(owner).getOwnerName().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getTeam2());
+            hiddenPlayers.get(owner).getTeam2().showPlayer(ChestOpenerSimulator.getPluginName(),  hiddenPlayers.get(owner).getOwnerName());
         }
     }
     // Показать всех игроков
-    private void showAllPlayers(Player player) {
+    private static void showAllPlayers(Player player) {
         for(Player player1 : Bukkit.getOnlinePlayers()){
             if(!player.equals(player1)) {
-                player.showPlayer(getPluginName(), player1);
+                player.showPlayer(ChestOpenerSimulator.getPluginName(), player1);
             }
         }
-    }
-    // Дать имя главного класса
-    private static Plugin getPluginName(){
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("chestOpenerSimulator");
-        if (plugin == null) {
-            Bukkit.getLogger().severe("Don't found ChestOpenerSimulator");
-            return null;
-        }
-        return plugin;
     }
     public static String checkYourTeamList(Player player){
         String owner = "";
@@ -231,5 +227,23 @@ public class HideSystem {
             }
         }
         return null;
+    }
+    private static void hidePlayer(Player viewer, Player viewer1) {
+        if (viewer == null || viewer1 == null || viewer ==viewer1) return;
+
+        CraftPlayer craftViewer = (CraftPlayer) viewer;
+        EntityPlayer entViewer = ((CraftPlayer) viewer1).getHandle();
+
+        PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(entViewer.getId());
+        craftViewer.getHandle().playerConnection.sendPacket(destroyPacket);
+    }
+    private static void showPlayer(Player viewer, Player viewer1) {
+        if (viewer == null || viewer1 == null || viewer == viewer1) return;
+
+
+        CraftPlayer craftViewer = (CraftPlayer) viewer;
+        EntityPlayer entTarget = ((CraftPlayer) viewer1).getHandle();
+        PacketPlayOutNamedEntitySpawn spawnPacket = new PacketPlayOutNamedEntitySpawn(entTarget);
+        craftViewer.getHandle().playerConnection.sendPacket(spawnPacket);
     }
 }

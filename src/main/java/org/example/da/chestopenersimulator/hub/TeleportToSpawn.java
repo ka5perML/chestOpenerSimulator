@@ -44,7 +44,7 @@ public class TeleportToSpawn {
             @SneakyThrows
             @Override
             public void run() {
-                player.sendTitle(ChatColor.RED + loadList[ticked % 3], "", 1, 100, 1);
+                player.sendTitle(ChatColor.RED + (ChatColor.BOLD +  loadList[ticked % 3]), "", 1, 100, 1);
                 if(ticked >= 5){
                     player.setFallDistance(0);
                     player.playSound(hubLucation, BLOCK_NOTE_BASS, 10, 1);
