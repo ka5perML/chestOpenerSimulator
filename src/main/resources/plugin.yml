@@ -32,6 +32,10 @@ commands:
     aliases: [ toplist, ebal ]
     description: Check top in balance
     usage: /<command>
+  balance:
+    aliases: [ bal, b ]
+    description: Check your balance
+    usage: /<command>
 permissions:
   permission.admin:
     default: op

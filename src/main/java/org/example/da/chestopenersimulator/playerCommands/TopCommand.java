@@ -6,13 +6,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.example.da.chestopenersimulator.playerManager.Manager;
-import org.example.da.chestopenersimulator.playerManager.PlayerListener;
 import org.example.da.chestopenersimulator.playerManager.PlayerStatsManager;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TopCommand implements CommandExecutor {
     @Override
@@ -22,7 +18,7 @@ public class TopCommand implements CommandExecutor {
         }
         Player player = (Player) commandSender;
         ArrayList<PlayerStatsManager> playerList = (ArrayList<PlayerStatsManager>) Manager.getTopPlayers(10);
-        String topMessage = "";
+        String topMessage = "  Лист Лидеров  \n";
         for(int i = 0; i < 50 ; i++){
             try {
                 topMessage += (i + 1) + ". " + playerList.get(i).getPlayerName() + " " + playerList.get(i).getMoney() + "\n";
