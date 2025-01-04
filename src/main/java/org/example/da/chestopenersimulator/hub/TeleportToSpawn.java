@@ -1,11 +1,15 @@
 package org.example.da.chestopenersimulator.hub;
 
 import lombok.Getter;
+import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.example.da.chestopenersimulator.ChestOpenerSimulator;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.*;
 
@@ -29,61 +33,30 @@ public class TeleportToSpawn {
         }
     }
     public static void joinPlayer(Player pl){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        ExecutorService executor1 = Executors.newSingleThreadExecutor();
-        executor1.submit(taskLoader(pl));
-        executor.submit(() -> {
-            pl.teleport(fakeHubLucation);
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                System.out.println("Error " + e.getMessage());
-            }
-            pl.setFallDistance(0);
-            pl.playSound(hubLucation, BLOCK_NOTE_BASS,10,1);
-            pl.sendTitle(ChatColor.GREEN + (ChatColor.BOLD +"Case Simulator"),ChatColor.GREEN +"Приятной игры",10,20,10);
-            pl.teleport(hubLucation);
+        taskLoader(pl);
 
-            Thread.currentThread().interrupt();
-        });
-        executor1.shutdown();
-        executor.shutdown();
     }
-    public static Runnable taskLoader(Player... players){
-        Runnable task = () -> {
-            try {
-                for (int i = 0; i < players.length; i++) {
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка.."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка..."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка.."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
-                    for(Player player : players) {
-                        player.sendTitle(ChatColor.RED + (ChatColor.BOLD + "Загрузка..."), "", 1, 100, 1);
-                    }
-                    Thread.sleep(800);
+    public static String taskLoader(Player player){
+        String[] loadList = {"Загрузка.","Загрузка..", "Загрузка..."};
+        player.teleport(fakeHubLucation);
+        new BukkitRunnable() {
+            int ticked = 0;
+            @SneakyThrows
+            @Override
+            public void run() {
+                player.sendTitle(ChatColor.RED + loadList[ticked % 3], "", 1, 100, 1);
+                if(ticked >= 5){
+                    player.setFallDistance(0);
+                    player.playSound(hubLucation, BLOCK_NOTE_BASS, 10, 1);
+                    player.sendTitle(ChatColor.GREEN + (ChatColor.BOLD + "Case Simulator"), ChatColor.GREEN + "Приятной игры", 10, 20, 10);
+                    player.teleport(hubLucation);
+                    this.cancel();
+                    return;
                 }
-            }catch(InterruptedException e){
-                System.out.println("Error " + e.getMessage());
+                ticked++;
             }
-
-        };
-        return task;
+        }.runTaskTimer(ChestOpenerSimulator.getPluginName(),0,20);
+        return "";
     }
     public static void playerOnlineList(){
         for(Player player : Bukkit.getOnlinePlayers()){

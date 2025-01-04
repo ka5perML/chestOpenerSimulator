@@ -8,9 +8,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoinListener implements Listener {
     @EventHandler
     public void playerJoinEvents (PlayerJoinEvent e) {
-        if (!TeleportToSpawn.isAliveExecute()){
-            TeleportToSpawn.joinPlayer(e.getPlayer());
-        }
+        TeleportToSpawn.joinPlayer(e.getPlayer());
     }
     @EventHandler
     public void spawnMobsEvent(EntitySpawnEvent e){

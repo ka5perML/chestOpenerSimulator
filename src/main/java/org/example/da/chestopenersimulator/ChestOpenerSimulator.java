@@ -1,12 +1,13 @@
 package org.example.da.chestopenersimulator;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
 import org.example.da.chestopenersimulator.adminCommand.DeleteNameCommand;
-import org.example.da.chestopenersimulator.adminCommand.HidePlayerCommand;
 import org.example.da.chestopenersimulator.adminCommand.NamedChestCommand;
 import org.example.da.chestopenersimulator.chestRoulette.RouletteSystem;
 import org.example.da.chestopenersimulator.hub.PlayerJoinListener;
@@ -53,5 +54,13 @@ public final class ChestOpenerSimulator extends JavaPlugin {
         for(Listener listener : listeners){
             pluginManager.registerEvents(listener,this);
         }
+    }
+    public static Plugin getPluginName(){
+        Plugin plugin = Bukkit.getPluginManager().getPlugin("chestOpenerSimulator");
+        if (plugin == null) {
+            Bukkit.getLogger().severe("Don't found ChestOpenerSimulator");
+            return null;
+        }
+        return plugin;
     }
 }
