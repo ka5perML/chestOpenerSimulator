@@ -65,7 +65,7 @@ public class TeamCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + (HideSystem.leaveInTeam(HideSystem.getTeamListPlayer(player).getOwnerName(),player)));
                     return true;
                 }else
-                    player.sendMessage(ChatColor.RED + "Нету приглашений!");
+                    player.sendMessage(ChatColor.RED + "/team <remove|list|leave>");
                 return true;
             }else{
                 player.sendMessage(ChatColor.RED + "/team <add|kick> <Name>");

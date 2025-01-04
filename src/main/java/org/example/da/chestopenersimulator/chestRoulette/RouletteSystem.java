@@ -31,13 +31,6 @@ public class RouletteSystem implements Listener{
         if (clickedBlock == null || clickedBlock.getType() != Material.CHEST) return;
 
         Location chestLocation = clickedBlock.getLocation();
-        // Сундук на рестарте
-        if (chestCooldowns.containsKey(chestLocation) &&
-                (System.currentTimeMillis() - chestCooldowns.get(chestLocation) < 6000)) {
-            event.setCancelled(true);
-            player.sendMessage("Сундук пока нельзя открыть!");
-            return;
-        }
 
         // Все условия пройдены, запускаем анимацию
         if (!playerOpenList.containsKey(player)) {

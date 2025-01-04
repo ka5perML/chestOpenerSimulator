@@ -30,7 +30,7 @@ public class Manager {
     public PlayerStatsManager getPlayerInfo(Player pl){
         return playerMap.get(pl.getUniqueId());
     }
-    public boolean isPlayerInManager(Player pl){
+    public static boolean isPlayerInManager(Player pl){
         return playerMap.containsKey(pl.getUniqueId());
     }
     public int getPlayerCount(){
@@ -45,5 +45,9 @@ public class Manager {
     }
     public static void updateBalance(Player pl,long money) {
         playerMap.put(pl.getUniqueId(), new PlayerStatsManager(pl.getDisplayName(), pl.getUniqueId(),money));
+    }
+
+    public static void setPlayerMap(Map<UUID, PlayerStatsManager> playerMap) {
+        Manager.playerMap = playerMap;
     }
 }

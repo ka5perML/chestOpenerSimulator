@@ -12,6 +12,7 @@ import org.example.da.chestopenersimulator.adminCommand.NamedChestCommand;
 import org.example.da.chestopenersimulator.chestRoulette.RouletteSystem;
 import org.example.da.chestopenersimulator.hub.PlayerJoinListener;
 import org.example.da.chestopenersimulator.hub.TeleportToSpawn;
+import org.example.da.chestopenersimulator.loadAnsSaveData.SaveFileManager;
 import org.example.da.chestopenersimulator.playerCommands.GetPlayerStatsCommand;
 import org.example.da.chestopenersimulator.playerCommands.TeamCommand;
 import org.example.da.chestopenersimulator.playerCommands.TeleportHubCommand;
@@ -20,10 +21,10 @@ import org.example.da.chestopenersimulator.visisbleSystem.HideListener;
 import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
 
 public final class ChestOpenerSimulator extends JavaPlugin {
-
+    private SaveFileManager saveFileManager;
     public void onEnable() {
         System.out.println("Online");
-
+        saveFileManager = new SaveFileManager(this);
         TeleportToSpawn.playerOnlineList();
         HideSystem.allHidePlayersAndPutList();
 
@@ -47,6 +48,7 @@ public final class ChestOpenerSimulator extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        saveFileManager.saveData();
         System.out.println("Offline");
     }
     public void listenerLoader(Listener... listeners){
