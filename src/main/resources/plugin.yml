@@ -1,0 +1,33 @@
+name: chestOpenerSimulator
+version: '${version}'
+main: org.example.da.chestopenersimulator.ChestOpenerSimulator
+api-version: 1.12.2
+author: [ kasperML ]
+commands:
+  deleteArm:
+    aliases: [ del ]
+    description: Spawn ArmorStand
+    usage: /<command> <all>
+    permission: permission.admin
+    permission-message: Не хватает прав
+  spawnArm:
+    aliases: [spawning]
+    description: Spawn ArmorStand
+    usage: /<command> <name>
+    permission: permission.admin
+    permission-message: Не хватает прав
+  stats:
+    aliases: [stat]
+    description: Give all player stats
+    usage: /<command>
+  hub:
+    aliases: [spawn,lobby, рги]
+    description: Teleport player in hub
+    usage: /<command>
+  team:
+    aliases: [party, p]
+    description: Teams command
+    usage: /<command> <add|invite|kick> <name>
+permissions:
+  permission.admin:
+    default: op

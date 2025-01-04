@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="chestOpenerSimulator:jar">
+    <output-path>$USER_HOME$/Desktop/serv/plugins</output-path>
+    <root id="archive" name="chestOpenerSimulator.jar">
+      <element id="module-output" name="chestOpenerSimulator.main" />
+      <element id="module-source" name="chestOpenerSimulator.main" />
+    </root>
+  </artifact>
+</component>
