@@ -28,6 +28,10 @@ commands:
     aliases: [party, p]
     description: Teams command
     usage: /<command> <add|invite|kick> <name>
+  top:
+    aliases: [ toplist, ebal ]
+    description: Check top in balance
+    usage: /<command>
 permissions:
   permission.admin:
     default: op

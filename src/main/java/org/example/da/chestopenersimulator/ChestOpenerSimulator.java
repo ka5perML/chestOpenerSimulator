@@ -16,6 +16,7 @@ import org.example.da.chestopenersimulator.loadAnsSaveData.SaveFileManager;
 import org.example.da.chestopenersimulator.playerCommands.GetPlayerStatsCommand;
 import org.example.da.chestopenersimulator.playerCommands.TeamCommand;
 import org.example.da.chestopenersimulator.playerCommands.TeleportHubCommand;
+import org.example.da.chestopenersimulator.playerCommands.TopCommand;
 import org.example.da.chestopenersimulator.playerManager.PlayerListener;
 import org.example.da.chestopenersimulator.visisbleSystem.HideListener;
 import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
@@ -32,6 +33,7 @@ public final class ChestOpenerSimulator extends JavaPlugin {
         getCommand("stats").setExecutor(new GetPlayerStatsCommand());
         getCommand("hub").setExecutor(new TeleportHubCommand());
         getCommand("team").setExecutor(new TeamCommand());
+        getCommand("top").setExecutor(new TopCommand());
 
         // Admin command
         getCommand("spawnArm").setExecutor(new NamedChestCommand());

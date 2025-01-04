@@ -2,9 +2,8 @@ package org.example.da.chestopenersimulator.playerManager;
 
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Manager {
     private static Map<UUID, PlayerStatsManager> playerMap = new HashMap<>();
@@ -49,5 +48,11 @@ public class Manager {
 
     public static void setPlayerMap(Map<UUID, PlayerStatsManager> playerMap) {
         Manager.playerMap = playerMap;
+    }
+    public static List<PlayerStatsManager> getTopPlayers(int limit) {
+        return playerMap.values().stream()
+                .sorted(Comparator.comparingInt(player -> (int) -player.getMoney()))
+                .limit(limit)
+                .collect(Collectors.toList());
     }
 }
