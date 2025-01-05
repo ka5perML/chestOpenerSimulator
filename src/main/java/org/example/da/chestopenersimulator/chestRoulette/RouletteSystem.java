@@ -1,8 +1,12 @@
 package org.example.da.chestopenersimulator.chestRoulette;
 
+import net.minecraft.server.v1_12_R1.ChatMessage;
+import net.minecraft.server.v1_12_R1.IChatBaseComponent;
+import net.minecraft.server.v1_12_R1.PacketPlayOutTitle;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import org.bukkit.scheduler.BukkitRunnable;
+import org.example.da.chestopenersimulator.ChestOpenerSimulator;
 import org.example.da.chestopenersimulator.playerManager.PlayerChangeBalance;
 import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
 import org.example.da.chestopenersimulator.visisbleSystem.VisibleTeamArmorStand;
@@ -40,13 +45,21 @@ public class RouletteSystem implements Listener{
                 player.sendMessage(ChatColor.RED + "Началось открытие!");
                 event.setCancelled(true);
                 startRouletteAnimation(chestLocation, player,infoCase(chestLocation));
+                playRouletteSound(player);
                 chestCooldowns.put(chestLocation, System.currentTimeMillis());
                 playerOpenList.put(player, true);
                 return;
             }
+            event.setCancelled(true);
+            sendTitleMessage(player, new ChatMessage(ChatColor.RED +(ChatColor.BOLD + "Не достаточно средств!")));
+            return;
         }
-        player.sendMessage(ChatColor.RED + (ChatColor.BOLD +"Вы уже открываете кейс"));
+        sendTitleMessage(player, new ChatMessage(ChatColor.RED + (ChatColor.BOLD +"Вы уже открываете кейс")));
         event.setCancelled(true);
+    }
+    public void sendTitleMessage(Player player, IChatBaseComponent iChatBaseComponent){
+        PacketPlayOutTitle packetPlayOutTitle = new PacketPlayOutTitle(PacketPlayOutTitle.EnumTitleAction.TITLE, iChatBaseComponent);
+        ((CraftPlayer)player).getHandle().playerConnection.sendPacket(packetPlayOutTitle);
     }
     // Добро на откыртие
     private boolean isGoodOpen(Location chestLocation, Player player){
@@ -97,8 +110,8 @@ public class RouletteSystem implements Listener{
         for (int i = 0; i < numberOfBlocks; i++) {
             ArmorStand armorStand = (ArmorStand) player.getWorld().spawnEntity
                     (animationTeleport(i,0.1,chestLocation,radius,numberOfBlocks), EntityType.ARMOR_STAND);
-            settingArmorStand(armorStand,num);
             VisibleTeamArmorStand.hideArmorStand(armorStand, HideSystem.getTeamListPlayer(player));
+            settingArmorStand(armorStand,num);
             stands.add(armorStand);
         }
             Plugin plugin = Bukkit.getPluginManager().getPlugin("chestOpenerSimulator"); // Определение главного класса
@@ -132,9 +145,28 @@ public class RouletteSystem implements Listener{
                     Bukkit.getLogger().fine(String.valueOf(ticksPassed));
                     ticksPassed += 1;
                 }
-            }.runTaskTimer(plugin,0,1);// Запускаем цикл каждую 1 тик (0.05 сек)
+            }.runTaskTimer(plugin,0,1);
 
     }
+    // Звук рулетке
+    public void playRouletteSound(Player player) {
+        Location location = player.getLocation(); // Получаем местоположение игрока
+
+        new BukkitRunnable() {
+            int ticket;
+            @Override
+            public void run() {
+                if (ticket >= 80) {
+                    cancel();
+                    return;
+                }
+                player.playSound(location, Sound.BLOCK_NOTE_PLING, 0.01f, 1.0f);
+                ticket += 2;
+            }
+        }.runTaskTimer(ChestOpenerSimulator.getPluginName(), 0, 2);
+
+    }
+
     // Анимация движения
     private Location animationTeleport(int i,double speed, Location chestLocation,double radius,int numberOfBlocks){
         double angle = speed * 0.05 + (i * (Math.PI * 2 / numberOfBlocks)); // Телепортирует блоки по кругу
@@ -149,8 +181,6 @@ public class RouletteSystem implements Listener{
         armorStand.setGravity(false);
         armorStand.setSmall(true);
         armorStand.setVisible(false);
-        ItemStack blockItem = new ItemStack(Material.STONE);
-        armorStand.getEquipment().setHelmet(blockItem);
         String prizeName = chancePrize(num);
         armorStand.setCustomName(prizeName);
         armorStand.setCustomNameVisible(true);

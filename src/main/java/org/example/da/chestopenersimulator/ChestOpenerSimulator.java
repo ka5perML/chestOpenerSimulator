@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.example.da.chestopenersimulator.adminCommand.DeleteNameCommand;
 import org.example.da.chestopenersimulator.adminCommand.NamedChestCommand;
 import org.example.da.chestopenersimulator.chestRoulette.RouletteSystem;
+import org.example.da.chestopenersimulator.chestRoulette.SpawnListener;
 import org.example.da.chestopenersimulator.hub.PlayerJoinListener;
 import org.example.da.chestopenersimulator.hub.TeleportToSpawn;
 import org.example.da.chestopenersimulator.hudPlayer.Hud;
@@ -46,7 +47,8 @@ public final class ChestOpenerSimulator extends JavaPlugin {
                 new PlayerJoinListener(),
                 new RouletteSystem(),
                 new HideListener(),
-                new PlayerSetting(this)
+                new PlayerSetting(this),
+                new SpawnListener()
         );
     }
 
