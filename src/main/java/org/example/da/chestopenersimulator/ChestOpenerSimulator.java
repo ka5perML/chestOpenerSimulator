@@ -12,6 +12,7 @@ import org.example.da.chestopenersimulator.adminCommand.NamedChestCommand;
 import org.example.da.chestopenersimulator.chestRoulette.RouletteSystem;
 import org.example.da.chestopenersimulator.hub.PlayerJoinListener;
 import org.example.da.chestopenersimulator.hub.TeleportToSpawn;
+import org.example.da.chestopenersimulator.hudPlayer.Hud;
 import org.example.da.chestopenersimulator.loadAnsSaveData.SaveFileManager;
 import org.example.da.chestopenersimulator.playerCommands.*;
 import org.example.da.chestopenersimulator.playerManager.PlayerListener;
@@ -25,6 +26,7 @@ public final class ChestOpenerSimulator extends JavaPlugin {
         saveFileManager = new SaveFileManager(this);
         TeleportToSpawn.playerOnlineList();
         HideSystem.allHidePlayersAndPutList();
+        Hud.runnableUpdateBalanceScoreboard();
 
         //command
         getCommand("stats").setExecutor(new GetPlayerStatsCommand());

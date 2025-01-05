@@ -76,7 +76,7 @@ public class SaveFileManager {
                 config.set("playerStats." + uuid.toString() + ".money", psm.getMoney());
             }
             config.save(dataFile);
-            System.out.println("Data saved: " + Manager.getPlayerMap());
+            System.out.println("Data saved: " + Manager.getPlayerMap().size() + "elements");
         } catch (IOException e) {
             System.out.println("Error" + e.getMessage());
         }
