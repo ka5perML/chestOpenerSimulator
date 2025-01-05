@@ -13,19 +13,20 @@ public class PlayerChangeBalance {
             Manager.addPlayer(player,money);
         }
     }
-    public static String buyPrizes(Player player){
+    public static String buyPrizes(Player player,int price){
         if(checkPlayer(player)) {
-            if(getMoney(Manager.getPlayerMap(),player) - 20000 >= 0) {
-                Manager.updateBalance(player, getMoney(Manager.getPlayerMap(), player) - 20000);
-                return "Успешная покупка";
+            if(getMoney(Manager.getPlayerMap(),player) - price >= 0) {
+                Manager.updateBalance(player, getMoney(Manager.getPlayerMap(), player) - price);
+                return "";
             }else
-                return "Не хватает деняг!!!";
+                return "";
         }
         return null;
     }
-    public static boolean isHaveManeyBayPrizes(Player player){
+    public static boolean isHaveManeyBayPrizes(Player player,int price){
         if(checkPlayer(player)) {
-            if(getMoney(Manager.getPlayerMap(),player) - 20000 >= 0) {
+            if(getMoney(Manager.getPlayerMap(),player) - price >= 0) {
+                buyPrizes(player, price);
                 return true;
             }else
                 return false;

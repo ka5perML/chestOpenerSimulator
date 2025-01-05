@@ -17,6 +17,7 @@ import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
 import org.example.da.chestopenersimulator.visisbleSystem.VisibleTeamArmorStand;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class RouletteSystem implements Listener{
     private final Map<Location, Long> chestCooldowns = new HashMap<>();
@@ -35,33 +36,58 @@ public class RouletteSystem implements Listener{
         // Все условия пройдены, запускаем анимацию
         if (!playerOpenList.containsKey(player)) {
             // Обычный кейс
-            if (ChestLocation.smallChestLocation(chestLocation)) {
+            if (isGoodOpen(chestLocation,player)) {
                 player.sendMessage(ChatColor.RED + "Началось открытие!");
                 event.setCancelled(true);
-                startRouletteAnimation(chestLocation, player,1);
+                startRouletteAnimation(chestLocation, player,infoCase(chestLocation));
                 chestCooldowns.put(chestLocation, System.currentTimeMillis());
                 playerOpenList.put(player, true);
-                return;
-            }
-            // Покупной кейс
-            if (ChestLocation.bigChestLocation(chestLocation) && PlayerChangeBalance.isHaveManeyBayPrizes(player)) {
-                player.sendMessage(ChatColor.RED + (ChatColor.BOLD + PlayerChangeBalance.buyPrizes(player)));
-                startRouletteAnimation(chestLocation, player,2);
-                event.setCancelled(true);
-                chestCooldowns.put(chestLocation, System.currentTimeMillis());
-                playerOpenList.put(player, true);
-                return;
-            } else {
-                player.sendMessage(ChatColor.RED + (ChatColor.BOLD + PlayerChangeBalance.buyPrizes(player)));
-                event.setCancelled(true);
                 return;
             }
         }
         player.sendMessage(ChatColor.RED + (ChatColor.BOLD +"Вы уже открываете кейс"));
         event.setCancelled(true);
     }
+    // Добро на откыртие
+    private boolean isGoodOpen(Location chestLocation, Player player){
+        try {
+            List<ChestInformation> lowChests = Arrays.stream(ChestInformation.values())
+                    .filter(chest -> chest.getLocation().equals(chestLocation))
+                   .collect(Collectors.toList());
+            if(lowChests.get(0).getInformation().equals("LOW")){
+                if (PlayerChangeBalance.isHaveManeyBayPrizes(player,1000))
+                    return true;
+            }else if(lowChests.get(0).getInformation().equals("BIG")) {
+                if (PlayerChangeBalance.isHaveManeyBayPrizes(player,20000))
+                    return true;
+            }else if(lowChests.get(0).getInformation().equals("LOX")) {
+                if (PlayerChangeBalance.isHaveManeyBayPrizes(player,0))
+                    return true;
+            }
+        }catch (IndexOutOfBoundsException e){
+
+        }
+        return false;
+    }
+    // Тип кейса
+    private String infoCase(Location chestLocation){
+        try {
+            List<ChestInformation> lowChests = Arrays.stream(ChestInformation.values())
+                    .filter(chest -> chest.getLocation().equals(chestLocation))
+                    .collect(Collectors.toList());
+            if (lowChests.get(0).getInformation().equals("LOW")) {
+                return "LOW";
+            } else if (lowChests.get(0).getInformation().equals("BIG")) {
+                return "BIG";
+            } else if (lowChests.get(0).getInformation().equals("LOX")) {
+                return "LOX";
+            }
+        }catch (IndexOutOfBoundsException e){
+        }
+        return null;
+    }
     // Анимация "Чем движет"
-    private void startRouletteAnimation(Location chestLocation, Player player,int num) {
+    private void startRouletteAnimation(Location chestLocation, Player player,String num) {
         int numberOfBlocks = 16; // Количество блоков
         double radius = 1.5; // Радиус вращения
         List<ArmorStand> stands = new ArrayList<>();
@@ -119,7 +145,7 @@ public class RouletteSystem implements Listener{
         return blockLocation;
     }
     // Настройки армор стенда
-    private void settingArmorStand(ArmorStand armorStand,int num){
+    private void settingArmorStand(ArmorStand armorStand,String num){
         armorStand.setGravity(false);
         armorStand.setSmall(true);
         armorStand.setVisible(false);
@@ -140,42 +166,38 @@ public class RouletteSystem implements Listener{
         return null;
     }
     // Шансы на призы
-    private static String chancePrize(int num) {
+    private static String chancePrize(String num) {
         Random random = new Random();
         double randomInt = random.nextDouble() * 100;
-        if(num == 1) {
-            if (randomInt < 1) {
-                return "20000";
-            } else if (randomInt < 5) {
-                return "8000";
-            } else if (randomInt < 15) {
-                return "5000";
-            } else if (randomInt < 25) {
-                return "2500";
-            } else if (randomInt < 40) {
-                return "1000";
-            } else if (randomInt < 60) {
-                return "500";
-            } else if (randomInt < 80) {
-                return "100";
+        if(num == "LOW") {
+            if (randomInt < 1) {return "20000";
+            } else if (randomInt < 5) {return "8000";
+            } else if (randomInt < 15) {return "5000";
+            } else if (randomInt < 25) {return "2500";
+            } else if (randomInt < 40) {return "1000";
+            } else if (randomInt < 60) {return "500";
+            } else if (randomInt < 80) {return "100";
             } else return "100";
-        }else{
-            if (randomInt < 1) {
-                return "100000";
-            } else if (randomInt < 5) {
-                return "50000";
-            } else if (randomInt < 15) {
-                return "30000";
-            } else if (randomInt < 25) {
-                return "25000";
-            } else if (randomInt < 40) {
-                return "15000";
-            } else if (randomInt < 60) {
-                return "10000";
-            } else if (randomInt < 80) {
-                return "5000";
+        }else if(num == "BIG"){
+            if (randomInt < 1) {return "100000";
+            } else if (randomInt < 5) {return "50000";
+            } else if (randomInt < 15) {return "30000";
+            } else if (randomInt < 25) {return "25000";
+            } else if (randomInt < 40) {return "15000";
+            } else if (randomInt < 60) {return "10000";
+            } else if (randomInt < 80) {return "5000";
             } else return "5000";
+        }else if(num == "LOX"){
+            if (randomInt < 1) {return "1000";
+            } else if (randomInt < 5) {return "800";
+            } else if (randomInt < 15) {return "600";
+            } else if (randomInt < 25) {return "400";
+            } else if (randomInt < 40) {return "250";
+            } else if (randomInt < 60) {return "100";
+            } else if (randomInt < 80) {return "50";
+            } else return "50";
         }
+        return null;
     }
     // Удаляет армор стенды
     private void stopBlock(ArrayList<ArmorStand> armorStands) {

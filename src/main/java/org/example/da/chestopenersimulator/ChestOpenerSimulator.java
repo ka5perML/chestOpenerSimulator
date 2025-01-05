@@ -16,6 +16,7 @@ import org.example.da.chestopenersimulator.hudPlayer.Hud;
 import org.example.da.chestopenersimulator.loadAnsSaveData.SaveFileManager;
 import org.example.da.chestopenersimulator.playerCommands.*;
 import org.example.da.chestopenersimulator.playerManager.PlayerListener;
+import org.example.da.chestopenersimulator.playerSetting.PlayerSetting;
 import org.example.da.chestopenersimulator.visisbleSystem.HideListener;
 import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
 
@@ -44,7 +45,8 @@ public final class ChestOpenerSimulator extends JavaPlugin {
                 new PlayerListener(),
                 new PlayerJoinListener(),
                 new RouletteSystem(),
-                new HideListener()
+                new HideListener(),
+                new PlayerSetting(this)
         );
     }
 
