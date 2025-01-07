@@ -1,6 +1,5 @@
 package org.example.da.chestopenersimulator.hub;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -8,9 +8,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 import org.example.da.chestopenersimulator.adminCommand.DeleteNameCommand;
+import org.example.da.chestopenersimulator.adminCommand.HidePlayerCommand;
 import org.example.da.chestopenersimulator.adminCommand.NamedChestCommand;
 import org.example.da.chestopenersimulator.chestRoulette.RouletteSystem;
-import org.example.da.chestopenersimulator.chestRoulette.SpawnListener;
+import org.example.da.chestopenersimulator.hub.PlayerInHubZone;
 import org.example.da.chestopenersimulator.hub.PlayerJoinListener;
 import org.example.da.chestopenersimulator.hub.TeleportToSpawn;
 import org.example.da.chestopenersimulator.hudPlayer.Hud;
@@ -29,7 +30,6 @@ public final class ChestOpenerSimulator extends JavaPlugin {
         TeleportToSpawn.playerOnlineList();
         HideSystem.allHidePlayersAndPutList();
         Hud.runnableUpdateBalanceScoreboard();
-
         //command
         getCommand("stats").setExecutor(new GetPlayerStatsCommand());
         getCommand("hub").setExecutor(new TeleportHubCommand());
@@ -40,6 +40,7 @@ public final class ChestOpenerSimulator extends JavaPlugin {
         // Admin command
         getCommand("spawnArm").setExecutor(new NamedChestCommand());
         getCommand("deleteArm").setExecutor(new DeleteNameCommand());
+        getCommand("hide").setExecutor(new HidePlayerCommand());
 
         //listener
         listenerLoader(
@@ -48,7 +49,7 @@ public final class ChestOpenerSimulator extends JavaPlugin {
                 new RouletteSystem(),
                 new HideListener(),
                 new PlayerSetting(this),
-                new SpawnListener()
+                new PlayerInHubZone()
         );
     }
 

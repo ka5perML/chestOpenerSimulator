@@ -11,6 +11,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -54,6 +55,10 @@ public class RouletteSystem implements Listener{
             return;
         }
         sendTitleMessage(player, new ChatMessage(ChatColor.RED + (ChatColor.BOLD +"Вы уже открываете кейс")));
+        event.setCancelled(true);
+    }
+    @EventHandler
+    public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         event.setCancelled(true);
     }
     public void sendTitleMessage(Player player, IChatBaseComponent iChatBaseComponent){

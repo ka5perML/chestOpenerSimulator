@@ -2,6 +2,7 @@ name: chestOpenerSimulator
 version: '${version}'
 main: org.example.da.chestopenersimulator.ChestOpenerSimulator
 api-version: 1.12.2
+depend: [ ProtocolLib ]
 author: [ kasperML ]
 commands:
   deleteArm:
@@ -36,6 +37,12 @@ commands:
     aliases: [ bal, b ]
     description: Check your balance
     usage: /<command>
+  hide:
+    aliases: [h]
+    description: Hide all players
+    usage: /<command>
+    permission: permission.admin
+    permission-message: Не хватает прав
 permissions:
   permission.admin:
     default: op

@@ -19,8 +19,10 @@ public class Hud {
         objective = scoreboard.registerNewObjective( ChatColor.GREEN +"Статистика", "");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
-        Score score = objective.getScore(ChatColor.GREEN+ "Баланс");
+        Score score = objective.getScore(ChatColor.GREEN + "Баланс");
+        Score score1 = objective.getScore(ChatColor.GREEN + "Онлайн");
         score.setScore((int) Manager.getPlayerMap().get(player.getUniqueId()).getMoney());
+        score1.setScore(Bukkit.getOnlinePlayers().size());
         setPlayerScoreboard(player);
     }
 

@@ -2,7 +2,6 @@ package org.example.da.chestopenersimulator.visisbleSystem;
 
 import net.minecraft.server.v1_12_R1.EntityArmorStand;
 import net.minecraft.server.v1_12_R1.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_12_R1.PacketPlayOutRespawn;
 import net.minecraft.server.v1_12_R1.PacketPlayOutSpawnEntityLiving;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftArmorStand;
