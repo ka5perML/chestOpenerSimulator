@@ -1,4 +1,4 @@
-package org.example.da.chestopenersimulator.adminCommand;
+package org.example.da.chestopenersimulator.command;
 
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -12,19 +12,20 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class DeleteNameCommand implements CommandExecutor {
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(commandSender.hasPermission("permission.admin")) {
+        if (commandSender.hasPermission("permission.admin")) {
 
             Player player = (Player) commandSender;
             if (strings.length > 2) {
                 player.sendMessage("Использование: /deleteArm all");
                 return true;
             }
-            if(strings[0].equals("all")){
+            if (strings[0].equals("all")) {
                 Location playerLocation = player.getLocation();
 
-                List<Entity> entities = (List<Entity>) player.getWorld().getNearbyEntities(playerLocation,10,10,10);
+                List<Entity> entities = (List<Entity>) player.getWorld().getNearbyEntities(playerLocation, 10, 10, 10);
 
                 for (Entity entity : entities) {
                     if (entity.getType() == EntityType.ARMOR_STAND) {

@@ -4,14 +4,15 @@ package org.example.da.chestopenersimulator.loadAnsSaveData;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.example.da.chestopenersimulator.playerManager.Manager;
-import org.example.da.chestopenersimulator.playerManager.PlayerStatsManager;
+import org.example.da.chestopenersimulator.player.manager.Manager;
+import org.example.da.chestopenersimulator.player.manager.PlayerStatsManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
 public class SaveFileManager {
+
     private final JavaPlugin plugin;
     private final File dataFile;
     private FileConfiguration config;
@@ -54,7 +55,6 @@ public class SaveFileManager {
             System.out.println("No data was found in " + dataFile.getName());
         }
     }
-
 
     public void saveData() {
         try {

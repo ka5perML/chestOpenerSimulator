@@ -7,14 +7,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class HideListener implements Listener {
+
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e){
-        Player player = e.getPlayer();
+    public void onPlayerJoin(PlayerJoinEvent event){
+        Player player = event.getPlayer();
         HideSystem.putHideNewPlayersList(player);
     }
+
     @EventHandler
-    public void onLeaveJoin(PlayerQuitEvent e){
-        Player player = e.getPlayer();
+    public void onPlayerQuit(PlayerQuitEvent event){
+        Player player = event.getPlayer();
         HideSystem.leaveAllTeam(player);
     }
 }

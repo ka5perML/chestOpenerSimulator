@@ -10,15 +10,16 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 public class VisibleTeamArmorStand {
-    public static void hideArmorStand(ArmorStand armorStand,TeamList tl){
+
+    public static void hideArmorStand(ArmorStand armorStand, TeamList tl) {
         CraftArmorStand craftArmorStand = (CraftArmorStand) armorStand;
         EntityArmorStand armorStands = craftArmorStand.getHandle();
         PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(armorStands.getId());
         PacketPlayOutSpawnEntityLiving spawnPacket = new PacketPlayOutSpawnEntityLiving(armorStands);
         for (Player player1 : Bukkit.getOnlinePlayers()) {
-            if(player1 != tl.getTeam1()  && player1 != tl.getTeam2() && player1 != tl.getOwnerName()){
+            if (player1 != tl.getFirstTeam() && player1 != tl.getSecondTeam() && player1 != tl.getOwnerName()) {
                 ((CraftPlayer) player1).getHandle().playerConnection.sendPacket(destroyPacket);
-            }else
+            } else
                 ((CraftPlayer) player1).getHandle().playerConnection.sendPacket(spawnPacket);
         }
     }

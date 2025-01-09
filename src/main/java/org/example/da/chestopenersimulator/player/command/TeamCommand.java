@@ -1,4 +1,4 @@
-package org.example.da.chestopenersimulator.playerCommands;
+package org.example.da.chestopenersimulator.player.command;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -16,7 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TeamCommand implements CommandExecutor {
-    private Map<Player,Player> invitedList = new HashMap<>();
+
+    private final Map<Player,Player> invitedList = new HashMap<>();
+
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!(commandSender instanceof Player)){
@@ -73,8 +75,8 @@ public class TeamCommand implements CommandExecutor {
         }
         return true;
     }
-    private void sendYesNoButtons(Player player, Player inviter) {
 
+    private void sendYesNoButtons(Player player, Player inviter) {
         TextComponent yesButton = new TextComponent(ChatColor.GREEN +" [Да]  ");
         yesButton.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team yes"));
         yesButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.GREEN +"Нажмите, чтобы согласиться.").create()));
@@ -92,9 +94,11 @@ public class TeamCommand implements CommandExecutor {
 
         player.spigot().sendMessage(message);
     }
+
     private static void removeByValueLambda(Map<Player, Player> map, Player valueToRemove) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(valueToRemove));
     }
+
     private static boolean containsValue(Map<Player, Player> map, Player valueToCheck) {
         for (Player value : map.values()) {
             if (value == valueToCheck) {
@@ -103,6 +107,7 @@ public class TeamCommand implements CommandExecutor {
         }
         return false;
     }
+
     public static <K, V> Player getKeyByValue(Map<Player, Player> map, Player value) {
         for (Map.Entry<Player, Player> entry : map.entrySet()) {
             if (entry.getValue().equals(value)) {

@@ -1,4 +1,4 @@
-package org.example.da.chestopenersimulator.hudPlayer;
+package org.example.da.chestopenersimulator.player.hud;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -6,17 +6,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.*;
 import org.example.da.chestopenersimulator.ChestOpenerSimulator;
-import org.example.da.chestopenersimulator.playerManager.Manager;
+import org.example.da.chestopenersimulator.player.manager.Manager;
 
 public class Hud {
+
     private static Scoreboard scoreboard;
     private static Objective objective;
 
-    public static void hudCreate(Player player){
+    public static void hudCreate(Player player) {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         scoreboard = manager.getNewScoreboard();
 
-        objective = scoreboard.registerNewObjective( ChatColor.GREEN +"Статистика", "");
+        objective = scoreboard.registerNewObjective(ChatColor.GREEN + "Статистика", "");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         Score score = objective.getScore(ChatColor.GREEN + "Баланс");
@@ -29,19 +30,20 @@ public class Hud {
     private static void setPlayerScoreboard(Player player) {
         player.setScoreboard(scoreboard);
     }
+
     public static void removePlayerScoreboard(Player player) {
         player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
-    public static void runnableUpdateBalanceScoreboard(){
-        new BukkitRunnable(){
+
+    public static void runnableUpdateBalanceScoreboard() {
+        new BukkitRunnable() {
             @Override
             public void run() {
-                for(Player player: Bukkit.getOnlinePlayers()){
+                for (Player player : Bukkit.getOnlinePlayers()) {
                     removePlayerScoreboard(player);
-                   hudCreate(player);
+                    hudCreate(player);
                 }
             }
-        }.runTaskTimer(ChestOpenerSimulator.getPluginName(), 0,100);
+        }.runTaskTimer(ChestOpenerSimulator.getPluginName(), 0, 100);
     }
-
 }

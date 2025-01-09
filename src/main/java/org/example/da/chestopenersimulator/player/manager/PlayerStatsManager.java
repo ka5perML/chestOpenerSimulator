@@ -1,4 +1,4 @@
-package org.example.da.chestopenersimulator.playerManager;
+package org.example.da.chestopenersimulator.player.manager;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
