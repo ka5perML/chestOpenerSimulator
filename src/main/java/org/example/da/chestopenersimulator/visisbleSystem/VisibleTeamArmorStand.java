@@ -10,7 +10,7 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 
 public class VisibleTeamArmorStand {
-    public static void hideArmorStand(ArmorStand armorStand,TeamList tl){
+    public void hideArmorStand(ArmorStand armorStand,TeamList tl){
         CraftArmorStand craftArmorStand = (CraftArmorStand) armorStand;
         EntityArmorStand armorStands = craftArmorStand.getHandle();
         PacketPlayOutEntityDestroy destroyPacket = new PacketPlayOutEntityDestroy(armorStands.getId());

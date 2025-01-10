@@ -15,14 +15,16 @@ public class SaveFileManager {
     private final JavaPlugin plugin;
     private final File dataFile;
     private FileConfiguration config;
+    private Manager manager;
 
-    public SaveFileManager(JavaPlugin plugin) {
+    public SaveFileManager(JavaPlugin plugin,Manager manager) {
         this.plugin = plugin;
+        this.manager = manager;
         this.dataFile = new File(plugin.getDataFolder(), "playerData.yml");
         loadData();
     }
 
-    public void loadData() {
+    private void loadData() {
         if (!dataFile.exists()) {
             try {
                 dataFile.getParentFile().mkdirs();
@@ -44,12 +46,12 @@ public class SaveFileManager {
                         continue;
                     }
                     PlayerStatsManager psm = new PlayerStatsManager(name, uuid, money);
-                    Manager.loadPlayerMap(psm);
+                    manager.loadPlayerMap(psm);
                 } catch (IllegalArgumentException e) {
                     System.out.println("Invalid UUID: " + uuidString);
                 }
             }
-            System.out.println("Data loaded: " + Manager.getPlayerMap());
+            System.out.println("Data loaded: " + manager.getPlayerMap());
         } else {
             System.out.println("No data was found in " + dataFile.getName());
         }
@@ -70,13 +72,13 @@ public class SaveFileManager {
 
             config.createSection("playerStats");
 
-            for (PlayerStatsManager psm : Manager.getPlayerMap().values()) {
+            for (PlayerStatsManager psm : manager.getPlayerMap().values()) {
                 UUID uuid = psm.getPlayerUUID();
                 config.set("playerStats." + uuid.toString() + ".playerName", psm.getPlayerName());
                 config.set("playerStats." + uuid.toString() + ".money", psm.getMoney());
             }
             config.save(dataFile);
-            System.out.println("Data saved: " + Manager.getPlayerMap().size() + "elements");
+            System.out.println("Data saved: " + manager.getPlayerMap().size() + "elements");
         } catch (IOException e) {
             System.out.println("Error" + e.getMessage());
         }

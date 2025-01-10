@@ -6,9 +6,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Manager {
-    private static Map<UUID, PlayerStatsManager> playerMap = new HashMap<>();
+    private Map<UUID, PlayerStatsManager> playerMap = new HashMap<>();
 
-    public static void addPlayer(Player pl, long money){
+    public void addPlayer(Player pl, long money){
         UUID playerUUID = pl.getUniqueId();
         if(!playerMap.containsKey(playerUUID)){
             playerMap.put(playerUUID, new PlayerStatsManager(pl.getName(),playerUUID,money));
@@ -16,7 +16,7 @@ public class Manager {
         }else
             System.out.println("User have " + pl.getDisplayName());
     }
-    public static void loadPlayerMap(PlayerStatsManager psm){
+    public void loadPlayerMap(PlayerStatsManager psm){
         playerMap.put(psm.getPlayerUUID() ,new PlayerStatsManager(psm.getPlayerName(), psm.getPlayerUUID(), psm.getMoney()));
     }
     public void removePlayer(Player pl){
@@ -29,27 +29,27 @@ public class Manager {
     public PlayerStatsManager getPlayerInfo(Player pl){
         return playerMap.get(pl.getUniqueId());
     }
-    public static boolean isPlayerInManager(Player pl){
+    public boolean isPlayerInManager(Player pl){
         return playerMap.containsKey(pl.getUniqueId());
     }
     public int getPlayerCount(){
         return playerMap.size();
     }
-    public static boolean isPlayerMapNoNull(){
+    public boolean isPlayerMapNoNull(){
         return playerMap.size() > 0;
     }
 
-    public static Map<UUID, PlayerStatsManager> getPlayerMap() {
+    public Map<UUID, PlayerStatsManager> getPlayerMap() {
         return playerMap;
     }
-    public static void updateBalance(Player pl,long money) {
+    public void updateBalance(Player pl,long money) {
         playerMap.put(pl.getUniqueId(), new PlayerStatsManager(pl.getDisplayName(), pl.getUniqueId(),money));
     }
 
-    public static void setPlayerMap(Map<UUID, PlayerStatsManager> playerMap) {
-        Manager.playerMap = playerMap;
+    public void setPlayerMap(Map<UUID, PlayerStatsManager> playerMap) {
+        this.playerMap = playerMap;
     }
-    public static List<PlayerStatsManager> getTopPlayers(int limit) {
+    public List<PlayerStatsManager> getTopPlayers(int limit) {
         return playerMap.values().stream()
                 .sorted(Comparator.comparingInt(player -> (int) -player.getMoney()))
                 .limit(limit)

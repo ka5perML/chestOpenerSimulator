@@ -56,8 +56,7 @@ public class PlayerSetting implements Listener {
         }.runTaskTimer(plugin, 20L, 20L);
     }
     private void setFullHealthAndFood(Player player) {
-        player.setHealth(player.getMaxHealth());
+        player.setHealth(20.0);
         player.setFoodLevel(20);
-        player.setSaturation(20);
     }
 }

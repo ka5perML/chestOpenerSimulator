@@ -3,23 +3,29 @@ package org.example.da.chestopenersimulator.chestRoulette;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 public enum ChestInformation {
-    CHEST(new Location(Bukkit.getWorld("world"), 12,236,-62),"LOW"),
-    CHEST1(new Location(Bukkit.getWorld("world"), 16,236,-62),"LOW"),
-    CHEST2(new Location(Bukkit.getWorld("world"), 5,236,-62),"BIG"),
-    CHEST3(new Location(Bukkit.getWorld("world"), 18,236,-53),"LOX"),
-    CHEST4(new Location(Bukkit.getWorld("world"), 12,236,-53),"LOX");
+    CHEST( 12,236,-62,"LOW"),
+    CHEST1(16,236,-62,"LOW"),
+    CHEST2(5,236,-62,"BIG"),
+    CHEST3(18,236,-53,"LOX"),
+    CHEST4( 12,236,-53,"LOX");
 
     private Location location;
+    private double x,y,z;
     private String information;
-    ChestInformation(Location lock, String information){
-        this.location = lock;
+    ChestInformation(double x, double y, double z, String information){
+        this.x= x;
+        this.y = y;
+        this.z = z;
         this.information = information;
     }
 
     public Location getLocation() {
-        return location;
+        World world = Bukkit.getWorld("world");
+        location = new Location(world, x, y, z);
+        return  location;
     }
 
     public String getInformation() {

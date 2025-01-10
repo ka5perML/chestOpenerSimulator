@@ -11,12 +11,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.example.da.chestopenersimulator.visisbleSystem.HideSystem;
+import org.example.da.chestopenersimulator.visisbleSystem.TeamList;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TeamCommand implements CommandExecutor {
     private Map<Player,Player> invitedList = new HashMap<>();
+    private HideSystem hideSystem;
+    public TeamCommand(HideSystem hideSystem){
+        this.hideSystem = hideSystem;
+    }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!(commandSender instanceof Player)){
@@ -27,7 +32,7 @@ public class TeamCommand implements CommandExecutor {
             if (strings.length != 1) {
                 Player player1 = Bukkit.getPlayer(strings[1]);
                 if (strings[0].equals("add") || strings[0].equals("invite") || strings[0].equals("i")){
-                    if (player1 != null && player1 != player && HideSystem.getTeamListPlayer(player).getOwnerName() == player) {
+                    if (player1 != null && player1 != player && hideSystem.getTeamListPlayer(player).getOwnerName() == player) {
                         invitedList.put(player,player1);
                         sendYesNoButtons(player1, player);
                         return true;
@@ -37,7 +42,7 @@ public class TeamCommand implements CommandExecutor {
                     }
                 } else if (strings[0].equals("kick")) {
                     if (player1 != null && player1 != player) {
-                        player.sendMessage(ChatColor.GREEN + HideSystem.kickInTeam(player, player1));
+                        player.sendMessage(ChatColor.GREEN + hideSystem.kickInTeam(player, player1));
                         return true;
                     } else {
                         player.sendMessage(ChatColor.RED + "Игрок не найден");
@@ -48,7 +53,7 @@ public class TeamCommand implements CommandExecutor {
                 return true;
             }else if(strings.length != 0) {
                 if(strings[0].equals("yes") && containsValue(invitedList,player)){
-                    player.sendMessage(ChatColor.GREEN + (HideSystem.joinTeam(getKeyByValue(invitedList,player), player)));
+                    player.sendMessage(ChatColor.GREEN + (hideSystem.joinTeam(getKeyByValue(invitedList,player), player)));
                     removeByValueLambda(invitedList,player);
                     return true;
                 }else if(strings[0].equals("no") && containsValue(invitedList,player)){
@@ -59,10 +64,10 @@ public class TeamCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "Прошлый запрос удален.");
                     invitedList.remove(player);
                 }else if(strings[0].equals("list")) {
-                    player.sendMessage(HideSystem.checkYourTeamList(player));
+                    player.sendMessage(hideSystem.checkYourTeamList(player));
                     return true;
                 }else if(strings[0].equals("leave")) {
-                    player.sendMessage(ChatColor.RED + (HideSystem.leaveInTeam(HideSystem.getTeamListPlayer(player).getOwnerName(),player)));
+                    player.sendMessage(ChatColor.RED + (hideSystem.leaveInTeam(hideSystem.getTeamListPlayer(player).getOwnerName(),player)));
                     return true;
                 }else
                     player.sendMessage(ChatColor.RED + "/team <remove|list|leave>");

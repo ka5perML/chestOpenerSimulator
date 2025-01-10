@@ -11,13 +11,17 @@ import org.example.da.chestopenersimulator.playerManager.PlayerStatsManager;
 import java.util.ArrayList;
 
 public class TopCommand implements CommandExecutor {
+    private Manager manager;
+    public TopCommand(Manager manager){
+        this.manager = manager;
+    }
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!(commandSender instanceof Player)){
             return true;
         }
         Player player = (Player) commandSender;
-        ArrayList<PlayerStatsManager> playerList = (ArrayList<PlayerStatsManager>) Manager.getTopPlayers(10);
+        ArrayList<PlayerStatsManager> playerList = (ArrayList<PlayerStatsManager>) manager.getTopPlayers(10);
         String topMessage = "  Лист Лидеров  \n";
         for(int i = 0; i < 50 ; i++){
             try {
