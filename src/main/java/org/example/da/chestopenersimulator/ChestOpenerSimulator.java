@@ -64,12 +64,4 @@ public final class ChestOpenerSimulator extends JavaPlugin {
             pluginManager.registerEvents(listener,this);
         }
     }
-    public static Plugin getPluginName(){
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("chestOpenerSimulator");
-        if (plugin == null) {
-            Bukkit.getLogger().severe("Don't found ChestOpenerSimulator");
-            return null;
-        }
-        return plugin;
-    }
 }
